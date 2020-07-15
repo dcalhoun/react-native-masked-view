@@ -10,12 +10,14 @@ buildscript {
     }
 
     dependencies {
-      classpath 'com.android.tools.build:gradle:3.3.1'
+      classpath 'com.android.tools.build:gradle:3.3.0'
+      classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
   }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
   compileSdkVersion safeExtGet('compileSdkVersion', 28)
@@ -50,8 +52,23 @@ repositories {
     // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
     url "$rootDir/../node_modules/react-native/android"
   }
+  if (project == rootProject) {
+    maven {
+      url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/"
+    }
+  } else {
+    // When building as a dep, the RN's maven repo is locally in the node_modules folder
+    def nodeModulesPath = "${project.buildDir}/../../node_modules/"
+    maven { url "${nodeModulesPath}/react-native/android" }
+  }
 }
 
 dependencies {
-  implementation 'com.facebook.react:react-native:+'
+  if (project == rootProject) {
+    // If this is the root project (e.g. Jitpack), specify a version
+    implementation 'com.facebook.react:react-native:0.61.5'
+  } else {
+    //noinspection GradleDynamicVersion
+    api "com.facebook.react:react-native:+"
+  }
 }
