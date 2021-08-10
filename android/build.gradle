@@ -1,5 +1,6 @@
 plugins {
     id "com.android.library"
+    id "maven-publish"
 }
 
 android {
@@ -36,5 +37,17 @@ dependencies {
     } else {
         //noinspection GradleDynamicVersion
         api "com.facebook.react:react-native:+"
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.wordpress-mobile'
+                artifactId = 'react-native-masked-view'
+            }
+        }
     }
 }
