@@ -7,27 +7,15 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-  compileSdkVersion safeExtGet('compileSdkVersion', 28)
-  buildToolsVersion safeExtGet('buildToolsVersion', '28.0.3')
+    compileSdkVersion 30
 
-  defaultConfig {
-    minSdkVersion safeExtGet('minSdkVersion', 16)
-    targetSdkVersion safeExtGet('targetSdkVersion', 28)
-  }
-
-  sourceSets {
-    main {
-      java.srcDirs = ['src/main/java']
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 30
     }
-  }
-
-  lintOptions {
-    abortOnError false
-    warning 'InvalidPackage'
-  }
-    buildTypes {
-        release {
-        }
+    lintOptions {
+        abortOnError false
+        warning 'InvalidPackage'
     }
 }
 
