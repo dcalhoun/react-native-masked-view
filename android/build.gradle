@@ -1,72 +1,53 @@
-def safeExtGet(prop, fallback) {
-    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+plugins {
+    id "com.android.library"
+    id "maven-publish"
 }
-
-buildscript {
-    repositories {
-      google()
-      jcenter()
-    }
-
-    dependencies {
-      classpath rootProject.ext.has('gradleBuildTools') ? rootProject.ext.get('gradleBuildTools') : 'com.android.tools.build:gradle:3.3.0'
-      classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-    }
-}
-
-apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-  compileSdkVersion safeExtGet('compileSdkVersion', 28)
-  buildToolsVersion safeExtGet('buildToolsVersion', '28.0.3')
+    compileSdkVersion 30
 
-  defaultConfig {
-    minSdkVersion safeExtGet('minSdkVersion', 16)
-    targetSdkVersion safeExtGet('targetSdkVersion', 28)
-  }
-
-  sourceSets {
-    main {
-      java.srcDirs = ['src/main/java']
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 30
     }
-  }
-
-  lintOptions {
-    abortOnError false
-    warning 'InvalidPackage'
-  }
-    buildTypes {
-        release {
-        }
+    lintOptions {
+        abortOnError false
+        warning 'InvalidPackage'
     }
 }
 
 repositories {
-  google()
-  jcenter()
-  maven { url "https://jitpack.io" }
-  maven {
-    // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-    url "$rootDir/../node_modules/react-native/android"
-  }
-  if (project == rootProject) {
-    maven {
-      url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
+    if (project == rootProject) {
+        maven { url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror" }
+    } else {
+        // When building as a dep, the RN's maven repo is locally in the node_modules folder
+        def nodeModulesPath = "${project.buildDir}/../../node_modules/"
+        maven { url "${nodeModulesPath}/react-native/android" }
     }
-  } else {
-    // When building as a dep, the RN's maven repo is locally in the node_modules folder
-    def nodeModulesPath = "${project.buildDir}/../../node_modules/"
-    maven { url "${nodeModulesPath}/react-native/android" }
-  }
+
+    google()
+    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-  if (project == rootProject) {
-    // If this is the root project (e.g. Jitpack), specify a version
-    implementation 'com.facebook.react:react-native:0.64.0'
-  } else {
-    //noinspection GradleDynamicVersion
-    api "com.facebook.react:react-native:+"
-  }
+    if (project == rootProject) {
+        // If this is the root project (e.g. Jitpack), specify a version
+        implementation 'com.facebook.react:react-native:0.64.0'
+    } else {
+        //noinspection GradleDynamicVersion
+        api "com.facebook.react:react-native:+"
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.wordpress-mobile'
+                artifactId = 'react-native-masked-view'
+            }
+        }
+    }
 }
