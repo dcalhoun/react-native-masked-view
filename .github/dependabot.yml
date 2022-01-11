@@ -4,4 +4,4 @@ updates:
     directory: '/android'
     schedule:
       interval: 'daily'
-    target-branch: 'wp-fork'
+    target-branch: 'try/dependabot-updates'
