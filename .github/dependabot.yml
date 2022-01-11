@@ -1,9 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: 'gradle'
-    # Look for `package.json` and `lock` files in the `root` directory
     directory: '/android'
-    # Check the npm registry for updates every day (weekdays)
     schedule:
       interval: 'daily'
     target-branch: 'wp-fork'
