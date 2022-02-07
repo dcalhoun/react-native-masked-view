@@ -1,6 +1,6 @@
 pluginManagement {
     plugins {
-        id("com.android.library") version "4.2.2"
+        id("com.android.library") version "7.1.1"
     }
     repositories {
         gradlePluginPortal()
